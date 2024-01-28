@@ -1,11 +1,25 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: {
+        index: './src/crumb.ts',
+    },
+    experiments: {
+        outputModule: true,
+    },
+    output: {
+        library: {
+            type: 'module',
+        },
+        filename: 'crumb.js'
+    },
     mode: 'development',
     devtool: 'inline-source-map',
     devServer: {
         static: './dist',
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js']
     },
     module: {
         rules: [
