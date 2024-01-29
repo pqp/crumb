@@ -171,6 +171,8 @@ export function color(col: string) {
 export function text(x: number, y: number, str: string) {
     const initialX = x;
     const initialY = y;
+    
+    str = str.toLowerCase();
 
     for (let c = 0; c < str.length; c++) {
         let char = str[c];
@@ -179,11 +181,19 @@ export function text(x: number, y: number, str: string) {
             x = initialX;
             continue;
         }
+        if (char === ' ') {
+            x += GLYPH_WIDTH + 1;
+            continue;
+        }
 
         for (let j = 0; j < GLYPH_HEIGHT; j++) {
             for (let i = 0; i < GLYPH_WIDTH; i++) {
-                const newX = x + i;
-                const newY = y + j;
+                let newX = x + i;
+                let newY = y + j;
+
+                if (char === ',') {
+                    newY += 2;
+                }
 
                 if (charset[char] === undefined) {
                     char = 'block';

@@ -1,218 +1,242 @@
 interface CharSet {
-   [index: string]: string; 
+    [index: string]: string;
 }
 
 let charset: CharSet = {
     'a':
-`
+        `
    xx   
   xxxx  
  xx  xx 
 xxxxxxxx
 xx    xx
 `,
-'b':
-`
+    'b':
+        `
 xxxxxxx 
 xx    xx
 xxxxxxx 
 xx    xx
 xxxxxxxx
 `,
-'c':
-`
+    'c':
+        `
 xxxxxxxx
 xx      
 xx      
 xx      
 xxxxxxxx
 `,
-'d':
-`
+    'd':
+        `
 xxxxxx  
 xx    xx
 xx    xx
 xx    xx
 xxxxxx  
 `,
-'e':
-`
+    'e':
+        `
 xxxxxxxx
 xx      
 xxxxxxxx
 xx      
 xxxxxxxx
 `,
-'f':
-`
+    'f':
+        `
 xxxxxxxx
 xx      
 xxxxxxxx
 xx      
 xx       
 `,
-'g':
-`
+    'g':
+        `
 xxxxxxxx
 xx      
 xx  xxxx
 xx    xx
 xxxxxxxx
 `,
-'h':
-`
+    'h':
+        `
 xx    xx
 xx    xx
 xxxxxxxx
 xx    xx
 xx    xx
 `,
-'i':
-`
+    'i':
+        `
 xxxxxxxx
    xx   
    xx   
    xx   
 xxxxxxxx
 `,
-'j':
-`
+    'j':
+        `
 xxxxxxxx
      xx 
      xx 
 xx   xx 
 xxxxxxx 
 `,
-'k':
-`
+    'k':
+        `
 xx    xx
 xx   xx 
 xxxxxx  
 xx   xx 
 xx    xx
 `,
-'l':
-`
+    'l':
+        `
 xx      
 xx      
 xx      
 xx      
 xxxxxxxx
 `,
-'m':
-`
+    'm':
+        `
 xx    xx
 xxx  xxx
 x  xx  x
 x  xx  x
 x  xx  x
 `,
-'n':
-`
+    'n':
+        `
 xx    xx
 xxx   xx
 xx x  xx
 xx  x xx
 xx   xxx
 `,
-'o':
-`
+    'o':
+        `
 xxxxxxxx
 xx    xx
 xx    xx
 xx    xx
 xxxxxxxx
 `,
-'p':
-`
+    'p':
+        `
 xxxxxxxx
 x     xx
 x     xx
 xxxxxxxx
 xx      
 `,
-'q':
-`
+    'q':
+        `
 xxxxxxxx
 xx    xx
 xxxxxxxx
    xxx  
      xxx
 `,
-'r':
-`
+    'r':
+        `
 xxxxxxxx
 x     xx
 xxxxxxxx
 xx  xx  
 xx  xxxx
 `,
-'s':
-`
+    's':
+        `
 xxxxxxxx
 xx      
 xxxxxxxx
       xx
 xxxxxxxx
 `,
-'t':
-`
+    't':
+        `
 xxxxxxxx
    xx   
    xx   
    xx   
    xx   
 `,
-'u':
-`
+    'u':
+        `
 xx    xx
 xx    xx
 xx    xx
 xx    xx
 xxxxxxxx
 `,
-'v':
-`
+    'v':
+        `
 x      x
 xx    xx
  xx  xx 
   xxxx  
    xx   
 `,
-'w':
-`
+    'w':
+        `
 x  xx  x
 x  xx  x
 x  xx  x
 x  xx  x
 xxxxxxxx
 `,
-'x':
-`
+    'x':
+        `
 xx    xx
   x  x  
    xx   
   x  x  
 xx    xx
 `,
-'y':
-`
+    'y':
+        `
 xx    xx
  xx  xx 
   xxxx  
    xx   
    xx   
 `,
-'z':
-`
+    'z':
+        `
 xxxxxxxx
      xx 
     xx  
   xx    
 xxxxxxxx
 `,
-'block':
-`
+    '.':
+        `
+        
+        
+        
+xxx     
+xxx     
+`,
+    ',':
+        `
+        
+        
+   xxxx 
+   xxxx 
+xxxxxx  
+`,
+    '!':
+        `
+  xx    
+  xx    
+  xx    
+        
+  xx    
+`,
+    'block':
+        `
 xxxxxxxx
 xxxxxxxx
 xxxxxxxx
@@ -221,4 +245,4 @@ xxxxxxxx
 `,
 };
 
-export {charset};
+export { charset };
