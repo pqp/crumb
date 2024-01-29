@@ -8,31 +8,72 @@ const RENDER_SCALE = 4;
 const WINDOW_WIDTH = RENDER_WIDTH * RENDER_SCALE;
 const WINDOW_HEIGHT = RENDER_HEIGHT * RENDER_SCALE;
 
+const GLYPH_WIDTH = 8;
+const GLYPH_HEIGHT = 8;
+
 interface ColorArray {
-    [index : string]: number;
+    [index: string]: number;
 }
 
 interface InputState {
     down: boolean,
     x: number,
     y: number,
-};
+}
 
-// TODO: Palette switching
+interface Rect {
+    x: number,
+    y: number,
+    width: number,
+    height?: number
+}
 
-const colors : ColorArray = {
-    'blue' : 0x0000FF,
-    'white' : 0xFFFFFF
+interface Circle {
+    x: number,
+    y: number,
+    radius: number
+}
+
+interface Vector {
+    x: number,
+    y: number,
+    length: number
+}
+
+let test: Vector;
+
+// TODO: Palette switching?
+
+// Arne's palette
+// https://androidarts.com/palette/16pal.htm
+const colors: ColorArray = {
+    'black:': 0x000000,
+    'gray': 0x9D9D9D,
+    'white': 0xFFFFFF,
+    'red': 0xBE2633,
+    'pink': 0xE06F8B,
+    'darkbrown': 0x493C2B,
+    'brown': 0xA46422,
+    'orange': 0xEB8931,
+    'yellow': 0xF7E26B,
+    'darkgreen': 0x2F484E,
+    'green': 0x44891A,
+    'slimegreen': 0xA3CE27,
+    'nightblue': 0x1B2632,
+    'seablue': 0x005784,
+    'skyblue': 0x31A2F2,
+    'cloudblue': 0xB2DCEF,
 };
 
 // keep a collection of rects
-let rects: Object[] = [];
+let rects: Rect[] = [];
+let circles: Circle[] = [];
 
-let graphics : PIXI.Graphics;
-let renderTexture : PIXI.RenderTexture;
-let canvas : PIXI.Sprite;
-let currentColor : number;
-let app : PIXI.Application<HTMLCanvasElement>;
+let graphics: PIXI.Graphics;
+let renderTexture: PIXI.RenderTexture;
+let canvas: PIXI.Sprite;
+let currentColor: number;
+let app: PIXI.Application<HTMLCanvasElement>;
 let input: InputState = {
     down: false,
     x: 0,
@@ -40,10 +81,15 @@ let input: InputState = {
 };
 
 let a =
-`
-xxxxx
-xxxxx
-xxxxx
+    `
+xxxxxxxx
+xxxxxxxx
+xxxxxxxx
+xxxxxxxx
+xxxxxxxx
+xxxxxxxx
+xxxxxxxx
+xxxxxxxx
 `;
 
 console.log(a);
@@ -52,21 +98,23 @@ function checkCollisions() {
 }
 
 function addListeners() {
-    window.addEventListener("keydown", 
-    (event) => {
-        console.log("Key is down");
-    });
+    window.addEventListener("keydown",
+        (event) => {
+            console.log("Key is down");
+            input.down = true;
+        });
 
     window.addEventListener("mousedown",
-    (event) => {
-        console.log("Mouse is down");
-    });
+        (event) => {
+            console.log("Mouse is down");
+            input.down = true;
+        });
 
     window.addEventListener("mousemove",
-    (event) => {
-        input.x = event.clientX / RENDER_SCALE;
-        input.y = event.clientY / RENDER_SCALE;
-    });
+        (event) => {
+            input.x = event.clientX / RENDER_SCALE;
+            input.y = event.clientY / RENDER_SCALE;
+        });
 }
 
 export function start(update: Function) {
@@ -102,15 +150,44 @@ export function start(update: Function) {
 
         app.renderer.render(graphics, { renderTexture, clear: true });
         rects = [];
+        circles = [];
         graphics.clear();
+        input.down = false;
     });
 }
 
 export function color(col: string) {
     currentColor = colors[col];
+
+    // TODO: check that string/color is defined in array
 }
 
-export function text(x : number, y : number, str: string) {
+export function text(x: number, y: number, str: string) {
+    const initialX = x;
+    const initialY = y;
+
+    for (let c = 0; c < str.length; c++) {
+        let char = str[c];
+        if (char === '\n') {
+            y += GLYPH_HEIGHT;
+            x = initialX;
+            continue;
+        }
+
+        for (let j = 0; j < GLYPH_HEIGHT; j++) {
+            for (let i = 0; i < GLYPH_WIDTH; i++) {
+                const newX = x + i;
+                const newY = y + j;
+
+                let glyph = a[j * GLYPH_WIDTH + i];
+                // ignore newlines for now
+                if (glyph === 'x' || glyph === '\n')
+                    pixel(newX, newY);
+            }
+        }
+
+        x += GLYPH_WIDTH;
+    }
 }
 
 export function rect(x: number, y: number, width: number, height?: number) {
@@ -144,10 +221,16 @@ export function circle(x: number, y: number, radius: number) {
         color: currentColor,
         colliding: {}
     };
+
+    circles.push(circle);
+
+    graphics.beginFill(currentColor);
+    graphics.drawCircle(x, y, radius);
+    graphics.endFill();
 }
 
-export function line(x1 : number, y1: number, x2: number, y2: number, thickness? : number) {
+export function line(x1: number, y1: number, x2: number, y2: number, thickness?: number) {
 
 }
 
-export {input};
+export { input };
