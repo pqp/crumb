@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        index: './src/crumb.ts',
+        crumb: './src/crumb.ts',
     },
     experiments: {
         outputModule: true,

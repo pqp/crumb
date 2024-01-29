@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import {charset} from './charset';
 
 const RENDER_WIDTH = 160;
 const RENDER_HEIGHT = 120;
@@ -9,7 +10,7 @@ const WINDOW_WIDTH = RENDER_WIDTH * RENDER_SCALE;
 const WINDOW_HEIGHT = RENDER_HEIGHT * RENDER_SCALE;
 
 const GLYPH_WIDTH = 8;
-const GLYPH_HEIGHT = 8;
+const GLYPH_HEIGHT = 5;
 
 interface ColorArray {
     [index: string]: number;
@@ -80,19 +81,11 @@ let input: InputState = {
     y: 0
 };
 
-let a =
-    `
-xxxxxxxx
-xxxxxxxx
-xxxxxxxx
-xxxxxxxx
-xxxxxxxx
-xxxxxxxx
-xxxxxxxx
-xxxxxxxx
-`;
 
-console.log(a);
+let mouseDown = false;
+let keyDown = false;
+
+console.log(charset['a']);
 
 function checkCollisions() {
 }
@@ -101,13 +94,25 @@ function addListeners() {
     window.addEventListener("keydown",
         (event) => {
             console.log("Key is down");
-            input.down = true;
+            keyDown = true;
+        });
+
+    window.addEventListener("keyup",
+        (event) => {
+            console.log("Key is up");
+            keyDown = false;
         });
 
     window.addEventListener("mousedown",
         (event) => {
             console.log("Mouse is down");
-            input.down = true;
+            mouseDown = true;
+        });
+
+    window.addEventListener("mouseup",
+        (event) => {
+            console.log("Mouse is up");
+            mouseDown = false;
         });
 
     window.addEventListener("mousemove",
@@ -144,6 +149,8 @@ export function start(update: Function) {
     addListeners();
 
     app.ticker.add((delta) => {
+        input.down = (mouseDown === true || keyDown === true);
+
         checkCollisions();
 
         update(delta);
@@ -152,7 +159,6 @@ export function start(update: Function) {
         rects = [];
         circles = [];
         graphics.clear();
-        input.down = false;
     });
 }
 
@@ -169,7 +175,7 @@ export function text(x: number, y: number, str: string) {
     for (let c = 0; c < str.length; c++) {
         let char = str[c];
         if (char === '\n') {
-            y += GLYPH_HEIGHT;
+            y += GLYPH_HEIGHT + 1;
             x = initialX;
             continue;
         }
@@ -179,14 +185,20 @@ export function text(x: number, y: number, str: string) {
                 const newX = x + i;
                 const newY = y + j;
 
-                let glyph = a[j * GLYPH_WIDTH + i];
-                // ignore newlines for now
-                if (glyph === 'x' || glyph === '\n')
+                if (charset[char] === undefined) {
+                    char = 'block';
+                }
+
+                // remove newlines in character definition
+                let glyph = [...charset[char]].filter(f => (f != '\n'));
+
+                let c = glyph[j * GLYPH_WIDTH + i];
+                if (c === 'x')
                     pixel(newX, newY);
             }
         }
 
-        x += GLYPH_WIDTH;
+        x += GLYPH_WIDTH + 1;
     }
 }
 
