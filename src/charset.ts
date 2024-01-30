@@ -127,17 +127,17 @@ xxxxxxxx
         `
 xxxxxxxx
 x     xx
-x     xx
 xxxxxxxx
+xx      
 xx      
 `,
     'q':
         `
 xxxxxxxx
 xx    xx
+xx xx xx
 xxxxxxxx
-   xxx  
-     xxx
+   xx   
 `,
     'r':
         `
