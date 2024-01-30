@@ -126,7 +126,7 @@ xxxxxxxx
     'p':
         `
 xxxxxxxx
-x     xx
+xx    xx
 xxxxxxxx
 xx      
 xx      
@@ -223,9 +223,9 @@ xxx
         `
         
         
-   xxxx 
-   xxxx 
-xxxxxx  
+   xx   
+  xxx   
+xxxx    
 `,
     '!':
         `

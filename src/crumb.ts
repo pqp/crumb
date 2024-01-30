@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {charset} from './charset';
+import { charset } from './charset';
 
 const RENDER_WIDTH = 160;
 const RENDER_HEIGHT = 120;
@@ -93,25 +93,21 @@ function checkCollisions() {
 function addListeners() {
     window.addEventListener("keydown",
         (event) => {
-            console.log("Key is down");
             keyDown = true;
         });
 
     window.addEventListener("keyup",
         (event) => {
-            console.log("Key is up");
             keyDown = false;
         });
 
     window.addEventListener("mousedown",
         (event) => {
-            console.log("Mouse is down");
             mouseDown = true;
         });
 
     window.addEventListener("mouseup",
         (event) => {
-            console.log("Mouse is up");
             mouseDown = false;
         });
 
@@ -171,19 +167,18 @@ export function color(col: string) {
 export function text(x: number, y: number, str: string) {
     const initialX = x;
     const initialY = y;
-    
+
     str = str.toLowerCase();
 
-    for (let c = 0; c < str.length; c++) {
-        let char = str[c];
+    [...str].forEach((char) => {
         if (char === '\n') {
             y += GLYPH_HEIGHT + 1;
             x = initialX;
-            continue;
+            return;
         }
         if (char === ' ') {
             x += GLYPH_WIDTH + 1;
-            continue;
+            return;
         }
 
         for (let j = 0; j < GLYPH_HEIGHT; j++) {
@@ -209,6 +204,10 @@ export function text(x: number, y: number, str: string) {
         }
 
         x += GLYPH_WIDTH + 1;
+    });
+
+    for (let c = 0; c < str.length; c++) {
+
     }
 }
 
