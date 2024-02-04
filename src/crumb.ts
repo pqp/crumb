@@ -16,6 +16,14 @@ interface ColorArray {
     [index: string]: number;
 }
 
+interface CollisionObject {
+    [index: string]: boolean;
+}
+
+interface Collision {
+    [index: string]: CollisionObject;
+}
+
 interface InputState {
     down: boolean,
     x: number,
@@ -26,7 +34,8 @@ interface Rect {
     x: number,
     y: number,
     width: number,
-    height?: number
+    height?: number,
+    color: string,
 }
 
 interface Circle {
@@ -41,14 +50,12 @@ interface Vector {
     length: number
 }
 
-let test: Vector;
-
 // TODO: Palette switching?
 
 // Arne's palette
 // https://androidarts.com/palette/16pal.htm
 const colors: ColorArray = {
-    'black:': 0x000000,
+    'black': 0x000000,
     'gray': 0x9D9D9D,
     'white': 0xFFFFFF,
     'red': 0xBE2633,
@@ -74,6 +81,7 @@ let graphics: PIXI.Graphics;
 let renderTexture: PIXI.RenderTexture;
 let canvas: PIXI.Sprite;
 let currentColor: number;
+let currentColorName: string;
 let app: PIXI.Application<HTMLCanvasElement>;
 let input: InputState = {
     down: false,
@@ -81,13 +89,34 @@ let input: InputState = {
     y: 0
 };
 
-
 let mouseDown = false;
 let keyDown = false;
 
-console.log(charset['a']);
+function checkCollision(rect1: Rect): Collision {
+    for (let i = 0; i < rects.length; i++) {
+        const rect2 = rects[i];
 
-function checkCollisions() {
+        if (rect1 === rect2) return;
+
+        const left = (rect1.x < rect2.x + rect2.width);
+        const right = (rect1.x + rect1.width > rect2.x);
+        const top = (rect1.y < rect2.y + rect2.height);
+        const bottom = (rect1.y + rect1.height > rect2.y);
+
+        // TODO: return Collision object
+
+        let collision: Collision;
+        collision = {};
+        collision.colliding = {};
+
+        if ((left && right) && (top && bottom)) {
+            let color = rect1.color;
+
+            collision.colliding[color] = true;
+        }
+
+        return collision;
+    }
 }
 
 function addListeners() {
@@ -113,8 +142,8 @@ function addListeners() {
 
     window.addEventListener("mousemove",
         (event) => {
-            input.x = event.clientX / RENDER_SCALE;
-            input.y = event.clientY / RENDER_SCALE;
+            input.x = Math.round(event.clientX / RENDER_SCALE);
+            input.y = Math.round(event.clientY / RENDER_SCALE);
         });
 }
 
@@ -147,26 +176,30 @@ export function start(update: Function) {
     app.ticker.add((delta) => {
         input.down = (mouseDown === true || keyDown === true);
 
-        checkCollisions();
-
         update(delta);
 
-        app.renderer.render(graphics, { renderTexture, clear: true });
         rects = [];
         circles = [];
+
+        app.renderer.render(graphics, { renderTexture, clear: true });
         graphics.clear();
     });
 }
 
-export function color(col: string) {
-    currentColor = colors[col];
+export function color(colorName: string) {
+    const color = colors[colorName];
 
-    // TODO: check that string/color is defined in array
+    if (color === undefined) {
+        console.error("undefined color");
+    }
+
+    currentColor = color;
+    currentColorName = colorName;
 }
 
 export function text(x: number, y: number, str: string) {
-    const initialX = x;
-    const initialY = y;
+    const initialX = Math.round(x);
+    const initialY = Math.round(y);
 
     str = str.toLowerCase();
 
@@ -205,48 +238,52 @@ export function text(x: number, y: number, str: string) {
 
         x += GLYPH_WIDTH + 1;
     });
-
-    for (let c = 0; c < str.length; c++) {
-
-    }
 }
 
-export function rect(x: number, y: number, width: number, height?: number) {
+export function rect(x: number, y: number, width: number, height?: number): Collision {
     height = (height === undefined) ? width : height;
 
     let rect = {
-        x: x,
-        y: y,
-        width: width,
-        height: height,
-        color: currentColor,
-        colliding: {}
+        x: Math.round(x),
+        y: Math.round(y),
+        width: Math.round(width),
+        height: Math.round(height),
+        color: currentColorName,
     };
+
+    const color = colors[currentColorName];
+
+    const collision = checkCollision(rect);
 
     rects.push(rect);
 
-    graphics.beginFill(currentColor);
+    graphics.beginFill(color);
     graphics.drawRect(x, y, width, height);
     graphics.endFill();
+
+    return collision;
 }
 
 export function pixel(x: number, y: number) {
-    rect(x, y, 1);
+    graphics.beginFill(currentColor);
+    graphics.drawRect(Math.round(x), Math.round(y), 1, 1);
+    graphics.endFill();
 }
 
 export function circle(x: number, y: number, radius: number) {
     let circle = {
-        x: x,
-        y: y,
-        radius: radius,
+        x: Math.round(x),
+        y: Math.round(y),
+        radius: Math.round(radius),
         color: currentColor,
-        colliding: {}
+        colliding: {
+        }
     };
 
     circles.push(circle);
 
     graphics.beginFill(currentColor);
-    graphics.drawCircle(x, y, radius);
+    graphics.drawCircle(Math.round(x), Math.round(y), radius);
     graphics.endFill();
 }
 
